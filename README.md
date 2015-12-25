@@ -58,8 +58,7 @@ function middleware (store) {
   return function (dispatch) {
     return function (action) {
       console.log('hello middleware');
-      var result = dispatch(action);
-      return result;
+      return dispatch(action);
     };
   };
 }
