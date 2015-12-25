@@ -66,7 +66,7 @@ function middleware (store) {
 
 function applyMiddleware (middleware) {
   return function (createStore) {
-    return function (reducer, initialState) {
+    return function createStoreSubstitute (reducer, initialState) {
       var store = createStore(reducer, initialState);
       return {
         getState: store.getState,
@@ -76,7 +76,7 @@ function applyMiddleware (middleware) {
   };
 }
 
-var appCreateStore = applyMiddleware(middleware)(createStore);
+var createStoreSubstitute = applyMiddleware(middleware)(createStore);
 
 function reducer (state, action) {
   if (action.type === 'one') {
@@ -85,7 +85,7 @@ function reducer (state, action) {
   return 'none';
 }
 
-var store = appCreateStore(reducer, 'start');
+var store = createStoreSubstitute(reducer, 'start');
 store.dispatch({type:'one'});
 store.getState();
 ```
