@@ -1,5 +1,11 @@
 'use strict';
 
+module.exports = {
+  createStore: createStore,
+  applyMiddleware: applyMiddleware,
+  bindActionCreator: bindActionCreator,
+};
+
 function createStore (reducer,initialState) {
   var currentState = initialState;
   var listeners = [];
@@ -20,15 +26,6 @@ function createStore (reducer,initialState) {
   };
 }
 
-function middleware (store) {
-  return function (dispatch) {
-    return function (action) {
-      console.log('hello middleware');
-      return dispatch(action);
-    };
-  };
-}
-
 function applyMiddleware (middleware) {
   return function (createStore) {
     return function createStoreSubstitute (reducer, initialState) {
@@ -42,37 +39,6 @@ function applyMiddleware (middleware) {
   };
 }
 
-function bindActionCreators (actionCreators, dispatch) {
+function bindActionCreator (actionCreators, dispatch) {
   return function () { dispatch(actionCreators()); };
 }
-
-var createStoreSubstitute = applyMiddleware(middleware)(createStore);
-
-function reducer (state, action) {
-  if (action.type === 'one') return 'one';
-  return 'none';
-}
-
-function actionCreator () { return { type:'two' }; }
-
-var store = createStoreSubstitute(reducer, 'start');
-store.subscribe(function () { console.log('hello listener') })
-
-store.dispatch({type:'one'});
-console.log(store.getState());
-// 'hello middleware'
-// 'hello listener'
-// -> 'one'
-
-store.dispatch(actionCreator());
-console.log(store.getState());
-// 'hello middleware'
-// 'hello listener'
-// -> 'none'
-
-var dispatchAction = bindActionCreators(actionCreator,store.dispatch);
-dispatchAction();
-console.log(store.getState());
-// 'hello middleware'
-// 'hello listener'
-// -> 'none'
