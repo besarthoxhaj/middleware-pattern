@@ -31,7 +31,10 @@ var simpleService = {
     console.log('service:initialize');
   },
   update: function (state,dispatch) {
-    console.log('service:update');
+    console.log('service:update',state);
+    if (state === 'one') {
+      dispatch({type:'bye'});
+    }
   }
 };
 
