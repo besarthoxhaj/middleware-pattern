@@ -52,5 +52,7 @@ store.dispatch(actionCreator('start!'));
 // service:update
 
 notification.emit('message', 'hello!');
+// service:update
 
-console.log(store.getState())
+store.getState();
+// ['start!', 'hello!']
