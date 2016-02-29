@@ -8,7 +8,6 @@ const Connect = require('./redux-react.js').createConnect(React);
 const redux = require('./redux.js');
 
 const reducer = (state, action) => {
-  console.log('redux');
   if (action.type === 'one') return 'one';
   return 'none';
 };
@@ -18,7 +17,6 @@ const store = redux.createStore(reducer,'start');
 const HelloWorld = React.createClass({
   displayName: 'HelloWorld',
   render: function () {
-    console.log('HelloWorldComponent',this.props);
     return (
       React.createElement('div',null)
     );
@@ -28,7 +26,6 @@ const HelloWorld = React.createClass({
 const HelloWorldContainer = React.createClass({
   displayName: 'HelloWorldContainer',
   render: function () {
-    console.log('HelloWorldContainer',this.props);
     return (
       React.createElement(HelloWorld,null)
     );
@@ -47,7 +44,6 @@ const HelloWorldReduxContainer = Connect(mapStateToProps)(HelloWorldContainer);
 const App = React.createClass({
   displayName: 'App',
   render: function () {
-    console.log('App');
     return (
       React.createElement(Provider, {
         store: store
@@ -69,12 +65,13 @@ jsdom.env('', {
 
     process.nextTick(function () {
 
-      console.log('next');
       store.dispatch({type:'one'});
+
+      console.log(store.getState());
 
       process.nextTick(function () {
 
-        console.log('final');
+
       });
     })
   }

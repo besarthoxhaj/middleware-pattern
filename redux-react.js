@@ -16,6 +16,10 @@ function createProvider (React) {
       this.store = props.store;
     }
 
+    getChildContext () {
+      return { store: this.store };
+    }
+
     componentWillReceiveProps (nextProps) {
 
       const store = this.store;
@@ -23,8 +27,6 @@ function createProvider (React) {
     }
 
     render () {
-
-      console.log('Provider', this.props);
 
       let children = this.props.children;
 
@@ -39,6 +41,10 @@ function createProvider (React) {
     }
   }
   
+  Provider.childContextTypes = {
+    store: React.PropTypes.object
+  };
+
   return Provider; 
 }
 
@@ -54,10 +60,15 @@ function createConnect (React) {
 
         constructor (props, context) {
           super(props, context);
+
+          this.handleChange = this.handleChange.bind(this);
+          this.trySubscribe = this.trySubscribe.bind(this);
+
           this.state = { storeState: null };
+          this.store = context.store;
         }
 
-        componentWillUpdate () {
+        componentDidMount () {
           this.trySubscribe();
         }
 
@@ -67,18 +78,24 @@ function createConnect (React) {
         }
 
         handleChange () {
-          this.setState({storeState: this.store.getState()});
+          this.setState({
+            storeState: this.store.getState()
+          });
         }
 
         render () {
-          console.log('Connect', this.props);
+          console.log('Render Connect with store:', this.storeState);
           return (
             React.createElement(WrappedComponent, {
-              store: this.props
+              store: this.storeState
             })
           );
         }
       }
+
+      Connect.contextTypes = {
+        store: React.PropTypes.object
+      };
 
       return Connect;
     }
