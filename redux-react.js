@@ -24,7 +24,7 @@ function createProvider (React) {
 
     render () {
 
-      console.log('Provider',this.props);
+      console.log('Provider', this.props);
 
       let children = this.props.children;
 
@@ -52,8 +52,26 @@ function createConnect (React) {
 
       class Connect extends Component {
 
+        constructor (props, context) {
+          super(props, context);
+          this.state = { storeState: null };
+        }
+
+        componentWillUpdate () {
+          this.trySubscribe();
+        }
+
+        trySubscribe () {
+          this.store.subscribe(this.handleChange);
+          this.handleChange();
+        }
+
+        handleChange () {
+          this.setState({storeState: this.store.getState()});
+        }
+
         render () {
-          console.log(this.props);
+          console.log('Connect', this.props);
           return (
             React.createElement(WrappedComponent, {
               store: this.props
